@@ -317,7 +317,7 @@ router.put('/approval', async(req, res) => {
             }
             else {
                 game.selected = [];
-                game.turn = (game.turn + 1) / req.body.numPlayers;
+                game.turn = (game.turn + 1) % req.body.numPlayers;
                 game.phase = "nomination";
             }
         }

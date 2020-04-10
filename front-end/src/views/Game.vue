@@ -138,6 +138,9 @@ export default {
             return this.game.quests.filter(quest => quest.succeeded === -1).length;
         },
         endStatement: function() {
+            if (this.numSuccesses === undefined) {
+                return "";
+            }
             if (this.numSuccesses >= 3) {
                 return "The Righteous have won!";
             }
@@ -195,9 +198,11 @@ export default {
 
             this.numVotes++;
             let final = this.numVotes === this.players.length;
+            console.log("reaches try");
             try {
                 let res = await axios.put('/api/game/approval', {vote: vote, numPlayers: this.players.length});
                 let yeas = res.data.yeas
+                console.log("reaches yeas", yeas, final);
                 if (final) {
                     if (yeas > this.players.length / 2) {
                         await axios.put('api/game/phase', {phase: 'quest'});
@@ -248,7 +253,7 @@ export default {
             }
         },
         async advanceToNomination() {
-            console.log(this.endStatement !== "");
+            console.log("reached advance to nomination", this.endStatement);
             if (this.endStatement !== "") {
                 clearInterval(this.updater);
                 await axios.delete('api/game');
@@ -256,7 +261,6 @@ export default {
             }
             else {
                 await axios.put('api/game/selected', []);
-                await axios.put('api/game/nextTurn', {numPlayers: this.players.length});
                 await axios.put('api/game/phase', {phase: 'nomination'});
                 this.loadData();
             }
