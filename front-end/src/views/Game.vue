@@ -44,7 +44,7 @@
             </div>
             <div v-if="game.phase === 'review'">
                 <p>Quest {{ successStatement }} with {{ numFails }} fail(s)</p>
-                <button v-if="myTurn" @click="advanceToNomination">Continue</button>
+                <button v-if="myTurn" @click="advanceToNomination(); axios.put('api/game/nextTurn', {numPlayers: this.players.length});">Continue</button>
                 <p>{{ endStatement }}</p>
             </div>
         </div>
@@ -261,6 +261,7 @@ export default {
             }
             else {
                 await axios.put('api/game/selected', []);
+                await axios.put('api/game/nextTurn', {numPlayers: this.players.length});
                 await axios.put('api/game/phase', {phase: 'nomination'});
                 this.loadData();
             }
