@@ -44,7 +44,7 @@
             </div>
             <div v-if="game.phase === 'review'">
                 <p>Quest {{ successStatement }} with {{ numFails }} fail(s)</p>
-                <button @click="advanceToNomination">Continue</button>
+                <button v-if="myTurn" @click="advanceToNomination">Continue</button>
                 <p>{{ endStatement }}</p>
             </div>
         </div>
